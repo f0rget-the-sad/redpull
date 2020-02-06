@@ -33,7 +33,7 @@ def download_attached(redmine, issue_id):
         log.info(f"\t* {a.filename}")
         a.download(savepath=download_dir)
 
-    log.info(f"Successfully downloaded {len(issue.attachments)}")
+    log.info(f"Successfully downloaded {len(issue.attachments)} attachments to {download_dir}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

@@ -26,7 +26,7 @@ Start downloading...
 	* attachment1.tar
 	* packets.pcap
 	* logs.xz
-Successfully downloaded 3
+Successfully downloaded 3 attachments to /tmp/24680/
 ```
 
 ## TODO
