@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
 import sys
-from redminelib import Redmine
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -11,14 +10,15 @@ log = logging.getLogger("redmine")
 log.setLevel(logging.DEBUG)
 log.addHandler(logging.StreamHandler())
 
-REDM_URL = "https://redmine.interfacemasters.com/redmine"
-DOWNLOAD_ROOT = "/tmp"
+from redminelib import Redmine
+from settings import *
 
-def connect(usr, passwrd):
-    log.debug(f"Connecting to: {REDM_URL}")
-    redmine = Redmine(REDM_URL, username=usr, password=passwrd, requests={'verify': False})
+def connect():
+    log.debug(f"Connecting to: {REDMINE_URL}")
+    redmine = Redmine(REDMINE_URL, key=REDMINE_KEY, requests={'verify': False})
 
-    log.info(f"Hi, {usr}")
+    user = redmine.user.get("current")
+    log.info(f"Hi, {user.firstname} {user.lastname}")
     return redmine
 
 def download_attached(redmine, issue_id):
@@ -36,8 +36,12 @@ def download_attached(redmine, issue_id):
     log.info(f"Successfully downloaded {len(issue.attachments)}")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 2:
         log.error("Wrong number of arguments!")
-        log.info(f"Usage {__file__} login password issue_id")
+        log.info(f"Usage {__file__} issue_id")
         sys.exit(1)
-    download_attached(connect(sys.argv[1], sys.argv[2]), sys.argv[3])
+    if not REDMINE_KEY:
+        log.error("REDMINE_KEY Not defined! Set it in settings.py")
+        sys.exit(1)
+
+    download_attached(connect(), sys.argv[1])
