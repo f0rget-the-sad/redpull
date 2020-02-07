@@ -2,7 +2,7 @@
 
 Download all attachments for Redmine issue.
 
-## Requrenments
+## Requirements
 
 * python >= 3.6
 * [redminelib](https://github.com/maxtepkeev/python-redmine)
@@ -31,4 +31,4 @@ Successfully downloaded 3 attachments to /tmp/24680/
 
 ## TODO
 
-[] Error handling
+- [ ] Error handling
