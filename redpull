@@ -27,11 +27,19 @@ def download_attached(redmine, issue_id):
     log.debug(f"Attachments: {[a.filename for a in issue.attachments]}")
     download_dir = f"{DOWNLOAD_ROOT}/{issue_id}/"
     os.makedirs(download_dir,  exist_ok=True)
+    if len(os.listdir(download_dir)):
+        log.error(f"Download dir ({download_dir}) is not empty")
+        sys.exit(1)
 
     log.info("Start downloading...")
     for a in issue.attachments:
-        log.info(f"\t* {a.filename}")
-        a.download(savepath=download_dir)
+        filename = a.filename
+        if os.path.exists(os.path.join(download_dir, filename)):
+            filename = f"{a.id}{a.filename}"
+            log.info(f"\tDublicate filename {a.filename}")
+            log.info(f"\tStore it as {filename}")
+        log.info(f"\t* {filename}")
+        a.download(savepath=download_dir, filename=filename)
 
     log.info(f"Successfully downloaded {len(issue.attachments)} attachments to {download_dir}")
 
